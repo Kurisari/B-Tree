@@ -10,7 +10,17 @@ class BTree:
         self.t = t
 
     def insert(self, k):
-        # Implementar la inserción de un valor en el B-Tree
+        if len(self.root.keys) == (2 * self.t) - 1:
+            new_root = BTreeNode()
+            new_root.child.append(self.root)
+            self.root = new_root
+            self.split_child(new_root, 0)
+        self.insert_non_full(self.root, k)
+    
+    def split_child(self, x, i):
+        pass
+    
+    def insert_non_full(self, x, k):
         pass
 
     def delete(self, k):
