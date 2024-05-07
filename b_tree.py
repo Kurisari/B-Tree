@@ -55,7 +55,38 @@ class BTree:
             self.root = self.root.child[0]
 
     def delete_key(self, x, k):
-        pass
+        i = 0
+        while i < len(x.keys) and k > x.keys[i]:
+            i += 1
+        if i < len(x.keys) and k == x.keys[i]:
+            if x.leaf:
+                x.keys.pop(i)
+            else:
+                self.delete_internal_key(x, i)
+        elif not x.leaf:
+            self.delete_key_from_child(x, i, k)
+
+    def delete_internal_key(self, x, i):
+        if len(x.child[i].keys) >= self.t:
+            predecessor = self.get_predecessor(x, i)
+            x.keys[i] = predecessor
+            self.delete_key(x.child[i], predecessor)
+        elif len(x.child[i + 1].keys) >= self.t:
+            successor = self.get_successor(x, i)
+            x.keys[i] = successor
+            self.delete_key(x.child[i + 1], successor)
+        else:
+            self.merge_children(x, i)
+
+    def delete_key_from_child(self, x, i, k):
+        if len(x.child[i].keys) == self.t - 1:
+            if i > 0 and len(x.child[i - 1].keys) >= self.t:
+                self.borrow_from_previous(x, i)
+            elif i < len(x.child) - 1 and len(x.child[i + 1].keys) >= self.t:
+                self.borrow_from_next(x, i)
+            else:
+                self.merge_children(x, i)
+        self.delete_key(x.child[i], k)
 
     def search(self, k):
         # Implementar la búsqueda de un valor en el B-Tree
