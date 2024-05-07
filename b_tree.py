@@ -87,6 +87,44 @@ class BTree:
             else:
                 self.merge_children(x, i)
         self.delete_key(x.child[i], k)
+    
+    def get_predecessor(self, x, i):
+        current = x.child[i]
+        while not current.leaf:
+            current = current.child[-1]
+        return current.keys[-1]
+
+    def get_successor(self, x, i):
+        current = x.child[i + 1]
+        while not current.leaf:
+            current = current.child[0]
+        return current.keys[0]
+
+    def borrow_from_previous(self, x, i):
+        child = x.child[i]
+        sibling = x.child[i - 1]
+        child.keys.insert(0, x.keys[i - 1])
+        x.keys[i - 1] = sibling.keys.pop()
+        if not child.leaf:
+            child.child.insert(0, sibling.child.pop())
+
+    def borrow_from_next(self, x, i):
+        child = x.child[i]
+        sibling = x.child[i + 1]
+        child.keys.append(x.keys[i])
+        x.keys[i] = sibling.keys.pop(0)
+        if not child.leaf:
+            child.child.append(sibling.child.pop(0))
+
+    def merge_children(self, x, i):
+        child = x.child[i]
+        sibling = x.child[i + 1]
+        child.keys.append(x.keys[i])
+        child.keys.extend(sibling.keys)
+        if not child.leaf:
+            child.child.extend(sibling.child)
+        x.keys.pop(i)
+        x.child.pop(i + 1)
 
     def search(self, k):
         # Implementar la búsqueda de un valor en el B-Tree
