@@ -48,7 +48,13 @@ class BTree:
             y.child = y.child[0: t - 1]
 
     def delete(self, k):
-        # Implementar la eliminación de un valor en el B-Tree
+        if not self.root.keys:
+            return
+        self.delete_key(self.root, k)
+        if not self.root.keys:
+            self.root = self.root.child[0]
+
+    def delete_key(self, x, k):
         pass
 
     def search(self, k):
