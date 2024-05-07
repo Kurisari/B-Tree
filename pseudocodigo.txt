@@ -1,0 +1,152 @@
+Clase BTreeNode:
+    Función __init__(leaf = Falso):
+        Inicializar leaf como leaf
+        Inicializar keys como una lista vacía
+        Inicializar child como una lista vacía
+
+Clase BTree:
+    Función __init__(t):
+        Crear un nuevo nodo raíz con leaf = Verdadero
+        Inicializar el árbol con la raíz creada
+        Almacenar el parámetro t
+
+    Función insertar(k):
+        Si el número de claves en la raíz es igual a 2*t - 1:
+            Crear una nueva raíz
+            Agregar la raíz existente como hijo de la nueva raíz
+            Actualizar la raíz del árbol con la nueva raíz
+            Llamar a dividir_hijo con la nueva raíz y el índice 0
+        Insertar_no_lleno(raíz, k)
+
+    Función insertar_no_lleno(x, k):
+        i = longitud de claves en x - 1
+        Si x es una hoja:
+            Insertar la clave k en la posición adecuada en x.keys
+        Sino:
+            Mientras i >= 0 y k < x.keys[i]:
+                Mover x.keys[i] a la posición i + 1
+                Decrementar i
+            Mover k a la posición i + 1
+            Si la longitud de claves en el hijo i de x es igual a 2*t - 1:
+                Llamar a dividir_hijo con x y i
+                Si k > x.keys[i]:
+                    Incrementar i
+            Llamar a insertar_no_lleno con el hijo i de x y k
+
+    Función dividir_hijo(x, i):
+        t = t
+        y = x.child[i]
+        z = Crear un nuevo nodo con leaf igual a leaf de y
+        Insertar z como hijo (i + 1) de x
+        Mover la clave en la posición t - 1 de y a la posición i de x.keys
+        Copiar las claves desde la posición t hasta (2*t - 1) de y a z.keys
+        Eliminar las claves desde la posición t hasta (2*t - 1) de y
+        Si y no es una hoja:
+            Copiar los hijos desde la posición t hasta 2*t de y a z.child
+            Eliminar los hijos desde la posición t hasta 2*t de y
+
+    Función eliminar(k):
+        Si no hay claves en la raíz:
+            Retornar
+        Llamar a eliminar_clave con la raíz y la clave k
+        Si no hay claves en la raíz:
+            Actualizar la raíz con el primer hijo de la raíz
+
+    Función eliminar_clave(x, k):
+        i = 0
+        Mientras i < longitud de claves en x y k > x.keys[i]:
+            Incrementar i
+        Si i < longitud de claves en x y k es igual a x.keys[i]:
+            Si x es una hoja:
+                Eliminar k de x.keys
+            Sino:
+                Llamar a eliminar_clave_interna con x y i
+        Sino si x no es una hoja:
+            Llamar a eliminar_clave_de_hijo con x, i y k
+        Llamar a eliminar_clave con el hijo i de x y k
+
+    Función eliminar_clave_interna(x, i):
+        Si la longitud de claves en el hijo i de x es mayor o igual a t:
+            Predecesor = Obtener predecesor de x en la posición i
+            Asignar predecesor a x.keys[i]
+            Llamar a eliminar_clave con el hijo i de x y predecesor
+        Sino si la longitud de claves en el hijo (i + 1) de x es mayor o igual a t:
+            Sucesor = Obtener sucesor de x en la posición i
+            Asignar sucesor a x.keys[i]
+            Llamar a eliminar_clave con el hijo (i + 1) de x y sucesor
+        Sino:
+            Llamar a fusionar_hijos con x e i
+
+    Función eliminar_clave_de_hijo(x, i, k):
+        Si la longitud de claves en el hijo i de x es igual a t - 1:
+            Si i > 0 y la longitud de claves en el hijo (i - 1) de x es mayor o igual a t:
+                Prestar_del_anterior con x e i
+            Sino si i < longitud de hijos de x - 1 y la longitud de claves en el hijo (i + 1) de x es mayor o igual a t:
+                Prestar_del_siguiente con x e i
+            Sino:
+                Fusionar_hijos con x e i
+        Llamar a eliminar_clave con el hijo i de x y k
+
+    Función obtener_predecesor(x, i):
+        Actual = x.child[i]
+        Mientras no sea una hoja:
+            Actual = Actual.child[-1]
+        Retornar la clave en la última posición de Actual.keys
+
+    Función obtener_sucesor(x, i):
+        Actual = x.child[i + 1]
+        Mientras no sea una hoja:
+            Actual = Actual.child[0]
+        Retornar la clave en la primera posición de Actual.keys
+
+    Función prestar_del_anterior(x, i):
+        Niño = x.child[i]
+        Hermano = x.child[i - 1]
+        Insertar x.keys[i - 1] al principio de Niño.keys
+        Asignar la última clave de Hermano.keys a x.keys[i - 1]
+        Si no es una hoja:
+            Insertar el último hijo de Hermano.child al principio de Niño.child
+
+    Función prestar_del_siguiente(x, i):
+        Niño = x.child[i]
+        Hermano = x.child[i + 1]
+        Insertar x.keys[i] al final de Niño.keys
+        Asignar la primera clave de Hermano.keys a x.keys[i]
+        Si no es una hoja:
+            Insertar el primer hijo de Hermano.child al final de Niño.child
+
+    Función fusionar_hijos(x, i):
+        Niño = x.child[i]
+        Hermano = x.child[i + 1]
+        Insertar x.keys[i] al final de Niño.keys
+        Concatenar las claves de Hermano.keys a las claves de Niño.keys
+        Si no es una hoja:
+            Concatenar los hijos de Hermano.child a los hijos de Niño.child
+        Eliminar x.keys[i] y el hijo (i + 1) de x
+
+    Función buscar(k):
+        Retornar buscar_clave(raíz, k)
+
+    Función buscar_clave(x, k):
+        i = 0
+        Mientras i < longitud de claves en x y k > x.keys[i]:
+            Incrementar i
+        Si i < longitud de claves en x y k es igual a x.keys[i]:
+            Retornar Verdadero
+        Sino si x es una hoja:
+            Retornar Falso
+        Sino:
+            Retornar buscar_clave(hijo i de x, k)
+
+    Función recorrer():
+        Si hay una raíz:
+            recorrer_nodo(raíz)
+
+    Función recorrer_nodo(nodo):
+        Si nodo:
+            Para cada i en el rango de longitud de claves en nodo:
+                Si no es una hoja:
+                    recorrer_nodo(hijo i de nodo)
+                Imprimir nodo.keys[i], sin nueva línea
+            Si no es una hoja:
+                recorrer_nodo(último hijo de nodo)
