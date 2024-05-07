@@ -127,8 +127,18 @@ class BTree:
         x.child.pop(i + 1)
 
     def search(self, k):
-        # Implementar la búsqueda de un valor en el B-Tree
-        pass
+        return self.search_key(self.root, k)
+
+    def search_key(self, x, k):
+        i = 0
+        while i < len(x.keys) and k > x.keys[i]:
+            i += 1
+        if i < len(x.keys) and k == x.keys[i]:
+            return True
+        elif x.leaf:
+            return False
+        else:
+            return self.search_key(x.child[i], k)
 
     def traverse(self):
         # Implementar el recorrido del B-Tree
