@@ -141,5 +141,14 @@ class BTree:
             return self.search_key(x.child[i], k)
 
     def traverse(self):
-        # Implementar el recorrido del B-Tree
-        pass
+        if self.root:
+            self._traverse(self.root)
+
+    def _traverse(self, node):
+        if node:
+            for i in range(len(node.keys)):
+                if not node.leaf:
+                    self._traverse(node.child[i])
+                print(node.keys[i], end=" ")
+            if not node.leaf:
+                self._traverse(node.child[-1])
