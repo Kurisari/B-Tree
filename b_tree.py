@@ -152,3 +152,53 @@ class BTree:
                 print(node.keys[i], end=" ")
             if not node.leaf:
                 self._traverse(node.child[-1])
+
+def run_tests():
+    # Crear un árbol B con un parámetro 't' de 2
+    b_tree = BTree(t=2)
+    
+    # Caso de prueba: inserción de claves
+    keys_to_insert = [5, 7, 3, 1, 9, 4, 8, 2, 6]
+    for key in keys_to_insert:
+        b_tree.insert(key)
+    print("Caso de prueba 1: Inserción de claves")
+    print("Claves insertadas:", keys_to_insert)
+    b_tree.traverse()  # Verificar el orden del árbol después de la inserción
+    print()
+    
+    # Caso de prueba: eliminación de claves
+    keys_to_delete = [3, 5, 7]
+    for key in keys_to_delete:
+        b_tree.delete(key)
+    print("Caso de prueba 2: Eliminación de claves")
+    print("Claves eliminadas:", keys_to_delete)
+    b_tree.traverse()  # Verificar el orden del árbol después de la eliminación
+    print()
+    
+    # Caso de prueba: recorrido del árbol
+    print("Caso de prueba 3: Recorrido del árbol")
+    print("Recorrido en orden del árbol:")
+    b_tree.traverse()
+    print("\n")
+    
+    # Caso de prueba: inserción de claves adicionales
+    additional_keys_to_insert = [10, 11, 12, 13, 14]
+    for key in additional_keys_to_insert:
+        b_tree.insert(key)
+    print("Caso de prueba 4: Inserción de claves adicionales")
+    print("Claves adicionales insertadas:", additional_keys_to_insert)
+    b_tree.traverse()  # Verificar el orden del árbol después de la inserción adicional
+    print()
+
+    # Caso de prueba: búsqueda de claves
+    keys_to_search = [6, 15, 2]
+    print("Caso de prueba 5: Búsqueda de claves")
+    for key in keys_to_search:
+        if b_tree.search(key):
+            print("La clave", key, "está presente en el árbol.")
+        else:
+            print("La clave", key, "no está presente en el árbol.")
+    print()
+
+# Ejecutar los casos de prueba
+run_tests()
