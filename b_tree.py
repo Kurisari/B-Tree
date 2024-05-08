@@ -117,14 +117,22 @@ class BTree:
             child.child.append(sibling.child.pop(0))
 
     def merge_children(self, x, i):
-        child = x.child[i]
-        sibling = x.child[i + 1]
-        child.keys.append(x.keys[i])
-        child.keys.extend(sibling.keys)
-        if not child.leaf:
-            child.child.extend(sibling.child)
-        x.keys.pop(i)
-        x.child.pop(i + 1)
+        if i < len(x.keys):
+            child = x.child[i]
+            if i + 1 < len(x.child):
+                sibling = x.child[i + 1]
+                child.keys.append(x.keys[i])
+                child.keys.extend(sibling.keys)
+                if not child.leaf:
+                    child.child.extend(sibling.child)
+                x.keys.pop(i)
+                x.child.pop(i + 1)
+            else:
+                child.keys.append(x.keys[i])
+                x.keys.pop(i)
+                x.child.pop(i + 1)
+        else:
+            pass
 
     def search(self, k):
         return self.search_key(self.root, k)
@@ -154,8 +162,8 @@ class BTree:
                 self._traverse(node.child[-1])
 
 def run_tests():
-    # Crear un árbol B con un parámetro 't' de 2
-    b_tree = BTree(t=2)
+    # Crear un árbol B con un parámetro 't' de 4
+    b_tree = BTree(t=4)
     
     # Caso de prueba: inserción de claves
     keys_to_insert = [5, 7, 3, 1, 9, 4, 8, 2, 6]
